@@ -1,10 +1,10 @@
 import express from "express";
-import { classifyNews, getStats } from "../controllers/newsController";
+import { classifyNews} from "../controllers/newsController.js";
 
 const router = express.Router();
 
-router.post("/classify", classifyNews)
+console.log("inside newRoutes.js");
 
-router.get("/stats", getStats)
+router.post("/classify", classifyNews)
 
 export default router;
