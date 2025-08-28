@@ -23,3 +23,7 @@
    npm install express@5.1.0 mongoose@8.18.0 dotenv@17.2.1 cors@2.8.5 axios@1.11.0
    
    npm install -D nodemon@3.1.10
+
+
+
+<img width="1716" height="827" alt="Screenshot 2025-08-27 213739" src="https://github.com/user-attachments/assets/121ebd43-7c14-4446-b6aa-8f6049f0e928" />
