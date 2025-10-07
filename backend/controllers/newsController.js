@@ -17,45 +17,40 @@ export const classifyNews = async (req, res) => {
     }
 
 
-
-    // calling huggineface api
     const response = await axios.post(
       `https://api-inference.huggingface.co/models/${MODEL}`,
       { inputs: text },
       { headers: { Authorization: `Bearer ${HF_API_KEY}` } }
     );
+
     if (!Array.isArray(response.data) || !response.data[0]) {
       return res.status(500).json({ error: "Unexpected response from HuggingFace API" });
     }
-    console.log(response.data);
 
-    // storing and trimming data
     const predictions = response.data[0];
     const topPrediction = predictions.reduce((a, b) => (a.score > b.score ? a : b));
-
     let result;
     if (topPrediction.label === "LABEL_0") result = "REAL";
     else if (topPrediction.label === "LABEL_1") result = "FAKE";
     else result = topPrediction.label.toUpperCase();
 
 
+    const data = await callGeminiAPI(text, newsSource);
 
-    // caling gemini api endpoint
-    const { category, source: geminiSource } = await callGeminiAPI(text);
-    const sourceAccuracy = geminiSource.toLowerCase() === newsSource.toLowerCase();
-
-
-
-    // saving to the db
     const news = new News({
       text,
-      source: geminiSource,
       userSource: newsSource,
-      sourceAccuracy,
-      result,
-      confidence: topPrediction.score,
+      modelResult: result,
+      sourceAccuracy: topPrediction.score,
+      aiResult: data.isFake,
+      category: data.category,
+      source: data.Source,
+      submittedSource: data.submittedSource,
+      trend: data.trend,
+      context: data.context,
+      aiAnalysis: data.aiAnalysis,
+      similarArticle: data.similarArticle,
       rawPredictions: predictions,
-      category
     });
 
     await news.save();
@@ -64,20 +59,17 @@ export const classifyNews = async (req, res) => {
     console.error("Classification error:", error.response?.data || error.message);
 
     if (error.response) {
-      // API responded with error status
       return res.status(500).json({ 
         error: "API request failed", 
         details: error.response.data,
         status: error.response.status 
       });
     } else if (error.request) {
-      // Request was made but no response received
       return res.status(500).json({ 
         error: "No response from API", 
         details: "Network or timeout error" 
       });
     } else {
-      // Something else happened
       return res.status(500).json({ 
         error: "Classification failed", 
         details: error.message 

@@ -1,52 +1,54 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import {ChatGoogleGenerativeAI} from "@langchain/google-genai";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 console.log("inside gemini controller");
 
-export const callGeminiAPI = async (text) => {
+export const callGeminiAPI = async (text, newsSource) => {
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash"});
-    
     
     const prompt = `Analyze the following news and return JSON with fields, give very straight and to the point answers here:
-    { "category": "Politics/Health/Sports/Tech/Other", "source": "Where it likely originated (Twitter, WhatsApp, News site, etc.)", "isFake": true/false, "confidence": 0.85 }
-    News: ${text}`;
+    { 
+      "isFake": "FAKE"|"REAL"
+      "category": "Politics/Health/Sports/Tech/Other",
+      "source": "Where it likely originated if fake(Twitter, WhatsApp, News site, etc.) / or if real send a link to original new source along with source and author name", 
+      "submittedSource": Twitter | ZeeNews.com | youtube | Reddit | AajTak | Aljazeera
+      "trend": "quantify how much this news or related topic has been in discussions in past in 6 months(if you do not have any specific number just send a generic number like fakenews increased by 10% something in past 3 months)",
+      "context": "give 4-5 line context of news if real, or if fake tell what have been the developments related to the news in past 1 year",
+      "aiAnalysis": "tell about your analysis in 4-5 line, that this fake is just one time affair or has been tredy because of its spicy nature linked to politics, if real then explain in 4-5 lines behind the reason about this news",
+      "similarArticle": [
+        "link1",
+        "link2",
+        "link3"
+      ] (link to articles that are on the same topic(send 3 links))
+    }
+    News: ${text},
+    News source being reported by the user: ${newsSource}`;
 
-    
-    const contents = [{
-      role: 'user',
-      parts: [{ text: prompt }]
-    }];
-    
-    
-    const result = await model.generateContent({ contents: contents });
-    const response = await result.response;
-    
-    console.log(response);
+    const llm = new ChatGoogleGenerativeAI({
+        model: "gemini-2.0-flash",
+        apiKey: process.env.GEMINI_API_KEY,
+        temperature: 0.3,
+    });
 
-    // Corrected here: .text is a method that needs to be called
-    const rawText = response.text() || "{}";
+    const result = await llm.invoke(prompt);
+    const response = result.content || "{}";
 
-    console.log(rawText);
+    const cleanedText = response.replace(/```json\s*|```/g, '').trim();
     
-
-    // Clean the response in case it has markdown formatting
-    const cleanedText = rawText.replace(/```json\n?|\n?```/g, '').trim();
-
-    console.log(cleanedText);
-    
-    // Check if the parsed JSON has the expected fields before returning
     const parsedData = JSON.parse(cleanedText);
     if (!parsedData.category || !parsedData.source) {
       console.warn("Gemini API returned an incomplete or empty JSON object.");
       return {
+        isFake: "none",
         category: "Other",
         source: "Unknown",
-        isFake: false,
-        confidence: 0.0
+        submittedSource: "none",
+        trend: "Unknown",
+        context: "none",
+        aiAnalysis: "Unknown",
+        similarArticle: "none"
       };
     }
     
@@ -55,10 +57,14 @@ export const callGeminiAPI = async (text) => {
     console.error("Gemini API error:", err);
 
     return {
+      isFake: "none",
       category: "Other",
       source: "Unknown",
-      isFake: false,
-      confidence: 0.0
+      submittedSource: "none",
+      trend: "Unknown",
+      context: "none",
+      aiAnalysis: "Unknown",
+      similarArticle: "none"
     };
   }
 };
