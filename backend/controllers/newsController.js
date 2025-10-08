@@ -43,6 +43,7 @@ export const classifyNews = async (req, res) => {
       modelResult: result,
       sourceAccuracy: topPrediction.score,
       aiResult: data.isFake,
+      confidencePercent: data.confidencePercent,
       category: data.category,
       source: data.Source,
       submittedSource: data.submittedSource,

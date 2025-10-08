@@ -11,6 +11,7 @@ export const callGeminiAPI = async (text, newsSource) => {
     const prompt = `Analyze the following news and return JSON with fields, give very straight and to the point answers here:
     { 
       "isFake": "FAKE"|"REAL"
+      "confidencePercent": "12%" | "85%" | 50% | 100% (tell how much confident you are on your judgement, also if you dont have anything then just return a random & base on the news)
       "category": "Politics/Health/Sports/Tech/Other",
       "source": "Where it likely originated if fake(Twitter, WhatsApp, News site, etc.) / or if real send a link to original new source along with source and author name", 
       "submittedSource": Twitter | ZeeNews.com | youtube | Reddit | AajTak | Aljazeera
@@ -42,6 +43,7 @@ export const callGeminiAPI = async (text, newsSource) => {
       console.warn("Gemini API returned an incomplete or empty JSON object.");
       return {
         isFake: "none",
+        confidencePercent: "nill",
         category: "Other",
         source: "Unknown",
         submittedSource: "none",
@@ -58,6 +60,7 @@ export const callGeminiAPI = async (text, newsSource) => {
 
     return {
       isFake: "none",
+      confidencePercent: "nill",
       category: "Other",
       source: "Unknown",
       submittedSource: "none",

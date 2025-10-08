@@ -8,6 +8,7 @@ const newsSchema = new mongoose.Schema({
     modelResult: {type: String, enum: ['FAKE', 'REAL'], required: true},
     sourceAccuracy : {type: Number, required: true, min: 0, max: 1},
     aiResult: {type: String},
+    confidencePercent: {type: String},
     category: { 
       type: String, 
       default: 'Other'

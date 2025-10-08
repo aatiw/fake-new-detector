@@ -104,7 +104,6 @@ export const getStats = async (req, res) => {
       categoryBreakdown,
       fakeRealByCategory,
       sourcesBreakdown,
-      lowConfidenceNews
     });
 
   } catch (err) {
