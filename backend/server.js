@@ -3,10 +3,12 @@ import connectDB from "./config/db.js";
 import newsRoutes from "./route/newRoutes.js";
 import dashboardRoutes from "./route/dashboardRoutes.js";
 import dotenv from "dotenv";
+import cors from 'cors';
 dotenv.config();
 
 const app = express();
 
+app.use(cors())
 app.use(express.json())
 
 connectDB();

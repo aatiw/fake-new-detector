@@ -13,7 +13,7 @@ export const callGeminiAPI = async (text, newsSource) => {
       "isFake": "FAKE"|"REAL"
       "confidencePercent": "12%" | "85%" | 50% | 100% (tell how much confident you are on your judgement, also if you dont have anything then just return a random & base on the news)
       "category": "Politics/Health/Sports/Tech/Other",
-      "source": "Where it likely originated if fake(Twitter, WhatsApp, News site, etc.) / or if real send a link to original new source along with source and author name", 
+      "source": "Where it likely originated if fake(Twitter, WhatsApp, News site, etc.) / or if real send a link to original new source along with source and author name (return a final output to the user do not ask for an iput, rather return a generic response for this subcategory if unable to find)", 
       "submittedSource": Twitter | ZeeNews.com | youtube | Reddit | AajTak | Aljazeera
       "trend": "quantify how much this news or related topic has been in discussions in past in 6 months(if you do not have any specific number just send a generic number like fakenews increased by 10% something in past 3 months)",
       "context": "give 4-5 line context of news if real, or if fake tell what have been the developments related to the news in past 1 year",

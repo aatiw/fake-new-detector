@@ -1,7 +1,7 @@
 import News from "../model/News.js";
 import axios from "axios";
 import { callGeminiAPI } from "./gemini.controller.js";
-import dotenv from "dotenv";
+import dotenv, { parse } from "dotenv";
 dotenv.config();
 
 const HF_API_KEY = process.env.HF_API_KEY; 
@@ -43,9 +43,9 @@ export const classifyNews = async (req, res) => {
       modelResult: result,
       sourceAccuracy: topPrediction.score,
       aiResult: data.isFake,
-      confidencePercent: data.confidencePercent,
+      confidencePercent: parseFloat(data.confidencePercent),
       category: data.category,
-      source: data.Source,
+      source: data.source,
       submittedSource: data.submittedSource,
       trend: data.trend,
       context: data.context,

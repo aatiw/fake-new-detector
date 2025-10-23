@@ -3,28 +3,28 @@ import mongoose from "mongoose";
 console.log("inside news.js");
 
 const newsSchema = new mongoose.Schema({
-    text: {type: String, required: true},
-    userSource: {type: String},
-    modelResult: {type: String, enum: ['FAKE', 'REAL'], required: true},
-    sourceAccuracy : {type: Number, required: true, min: 0, max: 1},
-    aiResult: {type: String},
-    confidencePercent: {type: String},
-    category: { 
-      type: String, 
-      default: 'Other'
-     }, 
-    source: {type: String},
-    submittedSource: {type: String},
-    trend: {type: String},
-    context: {type: String},
-    aiAnalysis: {type: String},
-    similarArticle: [{type:String}],
-    rawPredictions: [
-      {
-        label: { type: String, required: true },
-        score: { type: Number, required: true }
-      }
-    ]
+          text: {type: String, required: true},
+          userSource: {type: String},
+          modelResult: {type: String, enum: ['FAKE', 'REAL'], required: true},
+          sourceAccuracy : {type: Number, required: true, min: 0, max: 1},
+          aiResult: {type: String},
+          confidencePercent: {type: Number},
+          category: { 
+            type: String, 
+            default: 'Other'
+          }, 
+          source: {type: String},
+          submittedSource: {type: String},
+          trend: {type: String},
+          context: {type: String},
+          aiAnalysis: {type: String},
+          similarArticle: [{type:String}],
+          rawPredictions: [
+            {
+              label: { type: String, required: true },
+              score: { type: Number, required: true }
+            }
+          ]
 }, {
   timestamps: true
 });

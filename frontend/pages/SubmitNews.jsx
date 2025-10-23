@@ -7,17 +7,18 @@ function SubmitNews() {
   const [text, setText] = useState('');
   const [link, setLink] = useState('');
   const [isFocused, setIsFocused] = useState(null);
-
+  const navigate = useNavigate();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const data = await axios.post('http://localhost:300/api/news/classify', {text, link});
+      const res = await axios.post('http://localhost:5000/api/news/classify', {text, link});
       navigate('/result',{
         state:{
           text,
           link,
-          data
+          data: res.data
         }
       })
 
