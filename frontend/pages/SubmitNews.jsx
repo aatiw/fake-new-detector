@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { Newspaper, Link as LinkIcon, Sparkles } from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
-import axios from 'axios';
-
 function SubmitNews() {
   const [text, setText] = useState('');
-  const [link, setLink] = useState('');
+  const [newsSource, setNewsSource] = useState('');
   const [isFocused, setIsFocused] = useState(null);
   const navigate = useNavigate();
   
@@ -13,16 +11,12 @@ function SubmitNews() {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:5000/api/news/classify', {text, link});
       navigate('/result',{
         state:{
           text,
-          link,
-          data: res.data
+          newsSource
         }
       })
-
-      console.log('Submitted:', { text, link });
     } catch (error) {
       console.log("error in submitNews, handlesbumite", error);
     }
@@ -74,16 +68,16 @@ function SubmitNews() {
                 <LinkIcon className="w-4 h-4 text-orange-500" />
                 Source URL
               </label>
-              <div className={`relative transition-all duration-300 ${isFocused === 'link' ? 'scale-[1.01]' : ''}`}>
+              <div className={`relative transition-all duration-300 ${isFocused === 'newsSource' ? 'scale-[1.01]' : ''}`}>
                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-gradient-to-br from-orange-100 to-rose-100 rounded-xl flex items-center justify-center">
                   <LinkIcon className="w-5 h-5 text-orange-600" />
                 </div>
                 <input
-                  id="link"
+                  id="newsSource"
                   type="url"
-                  value={link}
-                  onChange={(e) => setLink(e.target.value)}
-                  onFocus={() => setIsFocused('link')}
+                  value={newsSource}
+                  onChange={(e) => setNewsSource(e.target.value)}
+                  onFocus={() => setIsFocused('newsSource')}
                   onBlur={() => setIsFocused(null)}
                   placeholder="https://example.com/breaking-news"
                   className="w-full pl-16 pr-5 py-4 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all text-slate-900 placeholder-slate-400 bg-white shadow-sm hover:border-slate-300 font-medium"

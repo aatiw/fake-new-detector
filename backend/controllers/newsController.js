@@ -55,6 +55,7 @@ export const classifyNews = async (req, res) => {
     });
 
     await news.save();
+
     res.json(news);
   } catch (error) {
     console.error("Classification error:", error.response?.data || error.message);
